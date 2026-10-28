@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Voley_TV · LIVONOR Salamanca 2026</title>
+  <style>
+    :root {color-scheme:dark; --navy:#07172f; --blue:#123b70; --sky:#21b4fc; --gold:#f4ca59; --white:#eef6ff; --muted:#a8bed9}
+    * {box-sizing:border-box}
+    html,body{margin:0;padding:0;width:100%;height:100%;background:transparent!important;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:var(--white)}
+    #stage{width:100vw;height:100vh;position:relative;background:transparent}
+    .panel{position:absolute;left:3.2%;bottom:4%;width:min(53vw,980px);background:rgba(5,22,48,.97);border:2px solid #358bd0;border-radius:18px;box-shadow:0 15px 45px #0008;overflow:hidden}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(100deg,#0e4b8d,#051a3e);padding:16px 22px;border-bottom:2px solid #259ddd}
+    .brand{font-size:clamp(17px,1.55vw,30px);font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap}
+    .brand span{color:#80d2ff}
+    .tag{font-size:clamp(11px,.75vw,17px);font-weight:800;letter-spacing:.7px;background:#f5bd42;color:#102345;border-radius:20px;padding:7px 13px;white-space:nowrap}
+    .subhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 22px 8px}
+    h1{font-size:clamp(15px,1.35vw,27px);margin:0;letter-spacing:.6px;text-transform:uppercase}
+    .mini{font-size:clamp(10px,.75vw,16px);font-weight:bold;color:#b5d9f7;white-space:nowrap}
+    .table{width:calc(100% - 28px);margin:5px 14px 12px;border-collapse:separate;border-spacing:0 3px;table-layout:fixed}
+    th{padding:5px 7px;text-align:center;color:#b7d5ef;font-size:clamp(10px,.75vw,16px);font-weight:700}
+    th:nth-child(2){text-align:left}
+    td{padding:10px 8px;text-align:center;background:#132d53;font-size:clamp(13px,1.07vw,23px);font-weight:700;white-space:nowrap}
+    tr.planeta td{background:#15588d;border-top:1px solid #27b9ff;border-bottom:1px solid #27b9ff;color:#fff}
+    td:first-child{border-radius:8px 0 0 8px;color:#f1cf69;font-size:clamp(15px,1.14vw,24px)}
+    td:last-child{border-radius:0 8px 8px 0;color:#ffe39b;font-size:clamp(15px,1.14vw,24px)}
+    td.team{text-align:left;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #2b5078;padding:10px 20px;background:#091f3e}
+    .footnote{color:#afc8e3;font-size:clamp(10px,.74vw,15px);line-height:1.3}
+    .status{font-size:clamp(10px,.77vw,15px);font-weight:700;white-space:nowrap;color:#8ce4ab}
+    .card-list{padding:15px 16px 18px;display:grid;gap:11px}
+    .duel-card{display:grid;grid-template-columns:80px 1fr 28px 1fr;align-items:center;gap:15px;padding:15px 18px;border:1px solid #2e6ba3;background:#12345d;border-radius:11px}
+    .duel-card strong{font-size:clamp(16px,1.32vw,27px);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .duel-card .time{font-size:clamp(14px,1.07vw,22px);font-weight:900;color:#f6d37a;text-align:left}
+    .duel-card .versus{color:#80bada;font-weight:bold;text-align:center}
+    .result-row{display:grid;grid-template-columns:80px 1fr 72px 1fr;gap:9px;align-items:center;padding:10px 16px;background:#17365e;border-radius:10px;font-size:clamp(14px,1.08vw,24px);font-weight:800}
+    .result-row span:nth-child(3){text-align:center;color:#ffdc78}
+    .result-row span:last-child{text-align:right}
+    .empty{padding:36px 20px;text-align:center;color:#c4dcf0;font-size:21px}
+    .warn{color:#ffe0a0}
+    @media (max-width: 1100px) {
+      .panel{width:64vw;border-radius:12px}
+      .header{padding:10px 13px}.subhead{padding:10px 13px 4px}
+      .table{width:calc(100% - 16px);margin:4px 8px 6px;border-spacing:0 2px}
+      td{padding:6px 4px}.footer{padding:8px 12px}
+      .duel-card{grid-template-columns:48px 1fr 18px 1fr;gap:7px;padding:10px}
+      .card-list{padding:8px;gap:7px}
+    }
+  </style>
+</head>
+<body>
+<div id="stage"><div id="output"></div></div>
+<script>
+"use strict";
+// La página está alojada fuera de Google Apps Script: sin barra superior.
+// La URL siguiente es el backend público y solo devuelve resultados (sin permisos de edición).
+const API_URL = "https://script.google.com/macros/s/AKfycbwkW3nO8wjdHcunp1UGPmLxJstcCuExysfwflVxuFYRtCU8vzSSFyiyQ_KE92OseXSIOQ/exec";
+const INTERVALO_MS = 20000;
+const ESPERA_MAX_MS = 15000;
+const params = new URLSearchParams(window.location.search);
+const mode = ['tabla','cruces','resultados'].includes(params.get('mode')) ? params.get('mode') : 'tabla';
+const preview = params.get('demo') === '1';
+const escapeHtml = x => String(x == null ? '' : x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SAMPLE = {
+  finished:0,total:21,invalid:0,checkedAt:'DEMO',projections:true,tieWarning:true,
+  standings:['PLANETA','JOGA','VOSTERH','PANTHERS','CUMBRES A','ALGARROBO','HUASCO'].map((name,i)=>({rank:i+1,name,played:0,wins:0,sf:0,sa:0,points:0})),
+  pairings:[{time:'11:00',a:'POR DEFINIR',b:'POR DEFINIR',duel:'5.º vs 6.º'},{time:'12:00',a:'POR DEFINIR',b:'POR DEFINIR',duel:'3.º vs 4.º'},{time:'13:00',a:'POR DEFINIR',b:'POR DEFINIR',duel:'1.º vs 2.º'}],results:[]
+};
+let ultimoDato = null;
+let solicitudActiva = null;
+let timerRefresco = null;
+const output = document.getElementById('output');
+function header(label,tag){return `<div class="header"><div class="brand">VOLEY<span>_TV</span> &nbsp;|&nbsp; LIVONOR 2026</div><div class="tag">${escapeHtml(tag)}</div></div><div class="subhead"><h1>${escapeHtml(label)}</h1><div class="mini">SALAMANCA · DAMAS U12 A</div></div>`;}
+function footer(d){
+  const warning = d.invalid ? `${d.invalid} marcador(es) por revisar` : (d.tieWarning ? 'Desempates por confirmar' : 'Clasificación provisoria');
+  return `<div class="footer"><div class="footnote">${escapeHtml(warning)} · Puntuación sujeta a bases oficiales</div><div class="status">${d.finished}/${d.total} partidos · ${escapeHtml(d.checkedAt)}</div></div>`;
+}
+function render(d){
+  if (!d || !Array.isArray(d.standings) || !Array.isArray(d.pairings) || !Array.isArray(d.results)) {
+    mostrarAviso('Respuesta inesperada del sistema de resultados.');
+    return;
+  }
+  const tag = preview ? 'VISTA DEMO' : `${d.finished}/${d.total} PARTIDOS`;
+  let content='';
+  if(mode==='tabla'){
+    const rows = d.standings.map(t=>`<tr class="${t.name==='PLANETA'?'planeta':''}"><td>${t.rank}º</td><td class="team">${escapeHtml(t.name)}</td><td>${t.played}</td><td>${t.wins}</td><td>${t.sf}-${t.sa}</td><td>${t.points}</td></tr>`).join('');
+    content = header('Tabla de posiciones',tag)+`<table class="table"><colgroup><col style="width:10%"><col style="width:39%"><col style="width:10%"><col style="width:10%"><col style="width:16%"><col style="width:15%"></colgroup><thead><tr><th>POS.</th><th>EQUIPO</th><th>PJ</th><th>PG</th><th>SETS</th><th>PTS</th></tr></thead><tbody>${rows}</tbody></table>`+footer(d);
+  }else if(mode==='cruces'){
+    const rows=d.pairings.map(p=>`<div class="duel-card"><span class="time">${escapeHtml(p.time)}</span><strong>${escapeHtml(p.a)}</strong><span class="versus">VS</span><strong>${escapeHtml(p.b)}</strong></div>`).join('');
+    content = header('Cruces del domingo 01/11',tag)+`<div class="card-list">${rows}</div>`+footer(d);
+  }else{
+    const rows=d.results.map(m=>`<div class="result-row"><span>${escapeHtml(m.time)}</span><span>${escapeHtml(m.a)}</span><span>${m.sa} - ${m.sb}</span><span>${escapeHtml(m.b)}</span></div>`).join('');
+    content=header('Últimos resultados',tag)+`<div class="card-list">${rows || '<div class="empty">Aún no hay resultados ingresados</div>'}</div>`+footer(d);
+  }
+  output.innerHTML=`<div class="panel">${content}</div>`;
+}
+function mostrarAviso(mensaje){
+  // Al haber datos previos, mantenemos la última tabla buena en pantalla.
+  if (ultimoDato) return;
+  output.innerHTML=`<div class="panel">${header('Conexión de resultados','AVISO')}<div class="empty">${escapeHtml(mensaje)}</div></div>`;
+}
+function programarRefresco(){
+  clearTimeout(timerRefresco);
+  timerRefresco = setTimeout(consultar,INTERVALO_MS);
+}
+function terminarSolicitud(){
+  if (!solicitudActiva) return;
+  clearTimeout(solicitudActiva.timer);
+  solicitudActiva.script.remove();
+  solicitudActiva = null;
+  programarRefresco();
+}
+window.voleyTvRecibe = function(data){
+  if (!solicitudActiva) return;
+  if (data && Array.isArray(data.standings) && Array.isArray(data.pairings) && Array.isArray(data.results)) {
+    ultimoDato = data;
+    render(data);
+  } else {
+    mostrarAviso('La respuesta de datos está incompleta.');
+  }
+  terminarSolicitud();
+};
+function consultar(){
+  if(solicitudActiva) return;
+  const script=document.createElement('script');
+  solicitudActiva = {script, timer:null};
+  script.async=true;
+  script.src=API_URL+'?api=datos&v='+Date.now();
+  script.onerror = function(){mostrarAviso('No se pudo consultar Google Sheets. Se reintentará.'); terminarSolicitud();};
+  solicitudActiva.timer = setTimeout(()=>{
+    mostrarAviso('Tiempo de espera agotado. Se reintentará.'); terminarSolicitud();
+  }, ESPERA_MAX_MS);
+  document.head.appendChild(script);
+}
+if(preview){ render(SAMPLE); } else { mostrarAviso('Conectando con los resultados…'); consultar(); }
+</script>
+</body>
+</html>
