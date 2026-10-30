@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Voley_TV · Overlay con logos</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg1: rgba(8, 13, 23, .94);
+      --bg2: rgba(12, 24, 43, .96);
+      --stroke: rgba(111, 233, 255, .45);
+      --stroke-strong: rgba(111, 233, 255, .9);
+      --cyan: #67e8ff;
+      --cyan-2:#34c4ff;
+      --lime:#d9ff5c;
+      --gold:#ffd86a;
+      --white:#f5fbff;
+      --soft:#bbd5e9;
+      --soft2:#8fb6cf;
+      --danger:#ffb0a1;
+      --row:#122238;
+      --row2:#162b45;
+      --planet:#1a4d6d;
+      --shadow: 0 18px 48px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:transparent!important;font-family:Arial,Helvetica,sans-serif;color:var(--white)}
+    #stage{position:relative;width:100vw;height:100vh}
+    .wrap{position:absolute;left:2.8%;bottom:3.6%;width:min(57vw,1050px)}
+    .overlay{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--stroke);background:linear-gradient(180deg, rgba(4,10,18,.97), rgba(9,18,30,.97));box-shadow:var(--shadow);backdrop-filter: blur(7px)}
+    .overlay::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 0% 0%, rgba(103,232,255,.15), transparent 28%),radial-gradient(circle at 100% 100%, rgba(52,196,255,.11), transparent 30%),linear-gradient(145deg, rgba(255,255,255,.035), transparent 32%);pointer-events:none}
+    .topbar{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px 10px;border-bottom:1px solid rgba(111,233,255,.18);background:linear-gradient(90deg, rgba(19,35,58,.95), rgba(8,16,27,.7))}
+    .brand-block{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-logo{width:44px;height:44px;border-radius:12px;object-fit:contain;background:#fff;padding:4px;border:1px solid rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(103,232,255,.08) inset}
+    .live-pill{font-size:clamp(9px,.72vw,14px);font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#001017;background:var(--lime);border-radius:999px;padding:7px 10px;box-shadow:0 0 22px rgba(217,255,92,.24)}
+    .brand{display:flex;flex-direction:column;line-height:1;min-width:0}
+    .brand strong{font-size:clamp(18px,1.75vw,31px);letter-spacing:1px;white-space:nowrap}
+    .brand strong span{color:var(--cyan)}
+    .brand small{margin-top:4px;font-size:clamp(9px,.78vw,14px);color:var(--soft);letter-spacing:1.2px;text-transform:uppercase;white-space:nowrap}
+    .event-chip{flex-shrink:0;font-size:clamp(10px,.84vw,15px);font-weight:900;letter-spacing:.8px;text-transform:uppercase;color:#04121d;background:linear-gradient(90deg,var(--cyan),var(--cyan-2));border-radius:999px;padding:9px 14px}
+    .headline{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 8px}
+    .headline h1{margin:0;font-size:clamp(15px,1.32vw,25px);text-transform:uppercase;letter-spacing:.9px}
+    .headline .right{font-size:clamp(10px,.78vw,15px);font-weight:800;color:var(--soft);text-transform:uppercase;white-space:nowrap}
+    .metric-strip{display:flex;gap:9px;flex-wrap:wrap;padding:0 18px 10px}
+    .metric{min-width:88px;background:rgba(103,232,255,.08);border:1px solid rgba(103,232,255,.13);padding:7px 10px;border-radius:14px}
+    .metric b{display:block;color:var(--white);font-size:clamp(12px,.92vw,18px)}
+    .metric span{display:block;color:var(--soft2);font-size:clamp(9px,.68vw,12px);text-transform:uppercase;letter-spacing:.7px}
+    table{width:calc(100% - 24px);margin:0 12px 10px;border-collapse:separate;border-spacing:0 6px;table-layout:fixed}
+    th{padding:0 8px 6px;color:var(--soft2);font-size:clamp(10px,.72vw,14px);font-weight:800;text-align:center;text-transform:uppercase;letter-spacing:.7px}
+    th:nth-child(2){text-align:left}
+    td{padding:10px 8px;background:linear-gradient(180deg,var(--row2),var(--row));font-size:clamp(13px,1.02vw,22px);font-weight:800;text-align:center;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(0,0,0,.32)}
+    td:first-child{border-radius:14px 0 0 14px}
+    td:last-child{border-radius:0 14px 14px 0}
+    tr.planeta td{background:linear-gradient(180deg, rgba(23,77,111,.95), rgba(18,58,83,.98));border-top:1px solid rgba(103,232,255,.35)}
+    .rank-badge{display:inline-flex;align-items:center;justify-content:center;min-width:42px;padding:6px 8px;border-radius:999px;background:rgba(255,216,106,.12);color:var(--gold);border:1px solid rgba(255,216,106,.28)}
+    .team{text-align:left}
+    .team-row{display:flex;align-items:center;gap:10px;min-width:0}
+    .team-logo{width:28px;height:28px;border-radius:50%;object-fit:contain;background:#fff;padding:2px;flex:0 0 28px;border:1px solid rgba(255,255,255,.12)}
+    .team-text{min-width:0}
+    .team .name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .team .tag-team{display:block;font-size:clamp(8px,.62vw,11px);margin-top:2px;color:var(--soft2);letter-spacing:.8px;text-transform:uppercase}
+    .pts{color:var(--lime)}
+    .sets{color:#bfeeff}
+    .cards{display:grid;gap:10px;padding:0 14px 14px}
+    .duel{display:grid;grid-template-columns:90px 1fr 54px 1fr;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:linear-gradient(180deg,var(--row2),var(--row));border:1px solid rgba(111,233,255,.12)}
+    .duel .time{font-size:clamp(14px,1.08vw,22px);font-weight:900;color:var(--gold)}
+    .team-box{display:flex;align-items:center;gap:10px;min-width:0}
+    .duel .team-box.right{justify-content:flex-end;text-align:right}
+    .duel .logo{width:42px;height:42px;border-radius:50%;object-fit:contain;background:#fff;padding:3px;flex:0 0 42px;border:1px solid rgba(255,255,255,.12)}
+    .duel .team-name{font-size:clamp(16px,1.18vw,25px);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .duel .vs{font-size:clamp(12px,.9vw,16px);font-weight:900;text-align:center;color:var(--cyan)}
+    .duel .seed{display:block;font-size:clamp(8px,.62vw,11px);text-transform:uppercase;letter-spacing:.8px;color:var(--soft2);margin-top:3px}
+    .result-row{display:grid;grid-template-columns:74px 1fr 86px 1fr;gap:10px;align-items:center;padding:12px 14px;border-radius:16px;background:linear-gradient(180deg,var(--row2),var(--row));border:1px solid rgba(111,233,255,.12)}
+    .result-row .time{font-weight:900;color:var(--gold);font-size:clamp(14px,1.0vw,21px)}
+    .result-row .score{font-weight:900;text-align:center;color:var(--lime);font-size:clamp(15px,1.16vw,25px)}
+    .result-row .side{display:flex;align-items:center;gap:10px;min-width:0}
+    .result-row .side.b{justify-content:flex-end}
+    .result-row .logo{width:30px;height:30px;border-radius:50%;object-fit:contain;background:#fff;padding:2px;flex:0 0 30px;border:1px solid rgba(255,255,255,.12)}
+    .result-row .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(14px,1.02vw,22px)}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px 14px;border-top:1px solid rgba(111,233,255,.12);background:linear-gradient(90deg, rgba(7,15,25,.95), rgba(7,15,25,.7))}
+    .left-note{font-size:clamp(9px,.7vw,13px);line-height:1.35;color:var(--soft)}
+    .status-pill{white-space:nowrap;font-size:clamp(10px,.73vw,14px);font-weight:900;text-transform:uppercase;color:#001218;background:linear-gradient(90deg,var(--lime),#b4ffcb);border-radius:999px;padding:8px 12px}
+    .empty{padding:34px 18px;text-align:center;color:var(--soft);font-size:clamp(16px,1.14vw,23px)}
+    .warning{color:var(--danger)}
+    @media (max-width:1100px){
+      .wrap{width:70vw;left:2%;bottom:2.2%}
+      .overlay{border-radius:18px}
+      .topbar{padding:10px 12px 8px}.headline{padding:10px 12px 8px}.metric-strip{padding:0 12px 8px;gap:6px}
+      .brand-logo{width:32px;height:32px;border-radius:8px}.team-logo{width:22px;height:22px;flex-basis:22px}.duel .logo{width:32px;height:32px;flex-basis:32px}.result-row .logo{width:24px;height:24px;flex-basis:24px}
+      table{width:calc(100% - 12px);margin:0 6px 8px;border-spacing:0 4px}.td{padding:7px 5px}
+      .cards{padding:0 8px 10px;gap:8px}.duel{grid-template-columns:54px 1fr 24px 1fr;padding:8px 10px;border-radius:12px}.result-row{grid-template-columns:54px 1fr 62px 1fr;padding:8px 10px;border-radius:12px}.footer{padding:8px 10px 10px}
+    }
+  </style>
+</head>
+<body>
+<div id="stage"><div class="wrap"><div id="output"></div></div></div>
+<script>
+"use strict";
+const API_URL = "https://script.google.com/macros/s/AKfycbwkW3nO8wjdHcunp1UGPmLxJstcCuExysfwflVxuFYRtCU8vzSSFyiyQ_KE92OseXSIOQ/exec";
+const INTERVALO_MS = 20000;
+const ESPERA_MAX_MS = 15000;
+const params = new URLSearchParams(window.location.search);
+const mode = ['tabla','cruces','resultados'].includes(params.get('mode')) ? params.get('mode') : 'tabla';
+const preview = params.get('demo') === '1';
+const escapeHtml = x => String(x == null ? '' : x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LOGO_BASE = 'logos/';
+const TEAM_LOGOS = {
+  'PLANETA': 'planeta.png',
+  'JOGA': 'joga.png',
+  'VOSTERH': 'vosterh.png',
+  'PANTHERS': 'panthers.png',
+  'CUMBRES A': 'cumbres.png',
+  'ALGARROBO': 'algarrobo.png',
+  'HUASCO': 'huasco.png'
+};
+const BRAND_LOGO = LOGO_BASE + 'voleytv.png';
+const SAMPLE = {
+  finished:2,total:21,invalid:0,checkedAt:'30/10 13:45',projections:true,tieWarning:true,
+  standings:[
+    {rank:1,name:'PLANETA',played:1,wins:1,sf:2,sa:0,points:3},
+    {rank:2,name:'JOGA',played:1,wins:1,sf:2,sa:1,points:2},
+    {rank:3,name:'VOSTERH',played:0,wins:0,sf:0,sa:0,points:0},
+    {rank:4,name:'PANTHERS',played:0,wins:0,sf:0,sa:0,points:0},
+    {rank:5,name:'CUMBRES A',played:0,wins:0,sf:0,sa:0,points:0},
+    {rank:6,name:'ALGARROBO',played:0,wins:0,sf:0,sa:0,points:0},
+    {rank:7,name:'HUASCO',played:1,wins:0,sf:0,sa:2,points:0}
+  ],
+  pairings:[
+    {time:'11:00',a:'CUMBRES A',b:'ALGARROBO',duel:'5.º vs 6.º'},
+    {time:'12:00',a:'VOSTERH',b:'PANTHERS',duel:'3.º vs 4.º'},
+    {time:'13:00',a:'PLANETA',b:'JOGA',duel:'1.º vs 2.º'}
+  ],
+  results:[
+    {time:'17:00',a:'PLANETA',sa:2,sb:0,b:'HUASCO'},
+    {time:'20:00',a:'PLANETA',sa:2,sb:1,b:'JOGA'}
+  ]
+};
+let ultimoDato = null;
+let solicitudActiva = null;
+let timerRefresco = null;
+const output = document.getElementById('output');
+function logoTag(name, cls){
+  const file = TEAM_LOGOS[name];
+  if (!file) return '';
+  return `<img class="${cls}" src="${LOGO_BASE + file}" alt="${escapeHtml(name)}" onerror="this.style.display='none'">`;
+}
+function getModeTitle(){ return mode === 'tabla' ? 'Tabla de posiciones' : mode === 'cruces' ? 'Camino a la final' : 'Resultados de la jornada'; }
+function getTopChip(data){ if(preview) return 'Vista demo'; if(mode==='cruces') return 'Cruces proyectados'; if(mode==='resultados') return 'Últimos resultados'; return 'Posiciones en vivo'; }
+function renderHeader(data){
+  return `
+    <div class="topbar">
+      <div class="brand-block">
+        <img class="brand-logo" src="${BRAND_LOGO}" alt="Voley_TV" onerror="this.style.display='none'">
+        <div class="live-pill">EN VIVO</div>
+        <div class="brand">
+          <strong>VOLEY<span>_TV</span></strong>
+          <small>LIVONOR Salamanca 2026 · Damas U12 A</small>
+        </div>
+      </div>
+      <div class="event-chip">${escapeHtml(getTopChip(data))}</div>
+    </div>
+    <div class="headline">
+      <h1>${escapeHtml(getModeTitle())}</h1>
+      <div class="right">Actualización automática</div>
+    </div>
+    <div class="metric-strip">
+      <div class="metric"><b>${escapeHtml(String(data.finished))}/${escapeHtml(String(data.total))}</b><span>Partidos</span></div>
+      <div class="metric"><b>${mode === 'cruces' ? 'Dom 01/11' : 'Serie A'}</b><span>${mode === 'cruces' ? 'Finales' : 'Fase regular'}</span></div>
+      <div class="metric"><b>${escapeHtml(data.checkedAt || '--')}</b><span>Última revisión</span></div>
+    </div>`;
+}
+function renderFooter(data){
+  const note = data.invalid ? `${data.invalid} marcador(es) por revisar.` : (data.tieWarning ? 'Clasificación provisoria, pendiente de criterios oficiales de desempate.' : 'Datos actualizados automáticamente desde Google Sheets.');
+  return `<div class="footer"><div class="left-note">${escapeHtml(note)}</div><div class="status-pill">Voley_TV · ${escapeHtml(mode === 'tabla' ? 'Tabla' : mode === 'cruces' ? 'Cruces' : 'Resultados')}</div></div>`;
+}
+function renderTabla(data){
+  const rows = data.standings.map(t => `
+    <tr class="${t.name === 'PLANETA' ? 'planeta' : ''}">
+      <td><span class="rank-badge">${t.rank}º</span></td>
+      <td class="team"><div class="team-row">${logoTag(t.name,'team-logo')}<div class="team-text"><span class="name">${escapeHtml(t.name)}</span><span class="tag-team">${t.name === 'PLANETA' ? 'Equipo destacado' : 'Equipo'}</span></div></div></td>
+      <td>${t.played}</td>
+      <td>${t.wins}</td>
+      <td class="sets">${t.sf}-${t.sa}</td>
+      <td class="pts">${t.points}</td>
+    </tr>`).join('');
+  return `<table><colgroup><col style="width:13%"><col style="width:39%"><col style="width:10%"><col style="width:10%"><col style="width:13%"><col style="width:15%"></colgroup><thead><tr><th>Pos.</th><th>Equipo</th><th>PJ</th><th>PG</th><th>Sets</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function renderCruces(data){
+  const rows = data.pairings.map((p,i) => `
+    <div class="duel">
+      <div class="time">${escapeHtml(p.time)}</div>
+      <div class="team-box">${logoTag(p.a,'logo')}<div class="team-name">${escapeHtml(p.a)}<span class="seed">${i===0?'5.º clasificado':i===1?'3.º clasificado':'1.º clasificado'}</span></div></div>
+      <div class="vs">VS</div>
+      <div class="team-box right"><div class="team-name">${escapeHtml(p.b)}<span class="seed">${i===0?'6.º clasificado':i===1?'4.º clasificado':'2.º clasificado'}</span></div>${logoTag(p.b,'logo')}</div>
+    </div>`).join('');
+  return `<div class="cards">${rows}</div>`;
+}
+function renderResultados(data){
+  const rows = data.results.map(r => `
+    <div class="result-row">
+      <div class="time">${escapeHtml(r.time)}</div>
+      <div class="side">${logoTag(r.a,'logo')}<div class="name">${escapeHtml(r.a)}</div></div>
+      <div class="score">${r.sa} - ${r.sb}</div>
+      <div class="side b"><div class="name">${escapeHtml(r.b)}</div>${logoTag(r.b,'logo')}</div>
+    </div>`).join('');
+  return `<div class="cards">${rows || '<div class="empty">Aún no hay resultados ingresados</div>'}</div>`;
+}
+function dValida(d){ return !!d && Array.isArray(d.standings) && Array.isArray(d.pairings) && Array.isArray(d.results); }
+function render(data){
+  if (!dValida(data)) { mostrarAviso('Respuesta inesperada del sistema de resultados.'); return; }
+  let body = mode === 'tabla' ? renderTabla(data) : mode === 'cruces' ? renderCruces(data) : renderResultados(data);
+  output.innerHTML = `<div class="overlay">${renderHeader(data)}${body}${renderFooter(data)}</div>`;
+}
+function mostrarAviso(mensaje){
+  if (ultimoDato) return;
+  output.innerHTML = `<div class="overlay">${renderHeader({finished:'--',total:'--',checkedAt:'--'})}<div class="empty ${/revisar|agotado|No se pudo/i.test(mensaje)?'warning':''}">${escapeHtml(mensaje)}</div>${renderFooter({invalid:0,tieWarning:true})}</div>`;
+}
+function programarRefresco(){ clearTimeout(timerRefresco); timerRefresco = setTimeout(consultar, INTERVALO_MS); }
+function terminarSolicitud(){ if (!solicitudActiva) return; clearTimeout(solicitudActiva.timer); solicitudActiva.script.remove(); solicitudActiva = null; programarRefresco(); }
+window.voleyTvRecibe = function(data){ if (!solicitudActiva) return; if (dValida(data)) { ultimoDato = data; render(data); } else { mostrarAviso('La respuesta de datos está incompleta.'); } terminarSolicitud(); };
+function consultar(){
+  if (solicitudActiva) return;
+  const script = document.createElement('script');
+  solicitudActiva = {script, timer:null};
+  script.async = true;
+  script.src = API_URL + '?api=datos&v=' + Date.now();
+  script.onerror = function(){ mostrarAviso('No se pudo consultar Google Sheets. Se reintentará.'); terminarSolicitud(); };
+  solicitudActiva.timer = setTimeout(function(){ mostrarAviso('Tiempo de espera agotado. Se reintentará.'); terminarSolicitud(); }, ESPERA_MAX_MS);
+  document.head.appendChild(script);
+}
+if (preview) render(SAMPLE); else { mostrarAviso('Conectando con los resultados…'); consultar(); }
+</script>
+</body>
+</html>
