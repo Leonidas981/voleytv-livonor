@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Voley_TV 2.0 · Tabla universal</title>
+<style>
+:root {--cyan:#65dffd;--lime:#d7f968;--gold:#ffdc7c;--white:#f5faff;--soft:#a5c1d6;--line:rgba(107,212,244,.31);--pane:rgba(7,17,31,.97)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent!important;color:var(--white);font-family:Arial,Helvetica,sans-serif}
+#stage{position:relative;width:100vw;height:100vh;overflow:hidden}
+#card{position:absolute;left:2.5%;bottom:3%;width:min(67vw,1070px);max-height:94vh;overflow:hidden;border:1px solid var(--line);border-radius:19px;background:linear-gradient(130deg,rgba(10,28,49,.98),rgba(5,11,21,.98));box-shadow:0 18px 45px rgba(0,0,0,.44)}
+#card:before{content:"";pointer-events:none;position:absolute;inset:0;background:radial-gradient(ellipse at 95% 0%,rgba(92,213,252,.10),transparent 45%)}
+.header,.heading,.footer{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.header{padding:13px 17px;background:linear-gradient(90deg,#142b47,#091725);border-bottom:1px solid rgba(101,223,253,.18)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:48px;height:48px;object-fit:contain;border-radius:10px;background:#fff;padding:3px}
+.brand .b1{font-weight:900;letter-spacing:1px;font-size:clamp(18px,1.8vw,29px)}.brand .b1 span{color:var(--cyan)}
+.brand .b2{font-size:clamp(9px,.85vw,13px);color:var(--soft);margin-top:4px;text-transform:uppercase;letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:43vw}
+.tag{font-size:clamp(10px,.8vw,13px);font-weight:900;letter-spacing:.8px;text-transform:uppercase;color:#02141e;background:var(--cyan);border-radius:30px;padding:8px 12px;flex-shrink:0}
+.heading{padding:13px 18px 9px;align-items:flex-end}.heading h1{margin:0;font-size:clamp(19px,1.6vw,26px);font-weight:900;text-transform:uppercase;letter-spacing:.5px}.heading p{margin:5px 0 0;color:var(--soft);font-size:clamp(12px,.93vw,15px)}
+.meta{font-size:clamp(11px,.85vw,14px);color:var(--soft);font-weight:bold;white-space:nowrap}
+.tablewrap{position:relative;padding:0 12px 8px;overflow:hidden}
+table{width:100%;border-collapse:separate;border-spacing:0 5px;table-layout:fixed}th{text-transform:uppercase;color:var(--soft);font-size:clamp(9px,.72vw,13px);letter-spacing:.6px;padding:5px 4px;text-align:center}th:nth-child(2){text-align:left}
+td{background:linear-gradient(180deg,#17324e,#11253b);padding:9px 5px;border-top:1px solid rgba(167,234,253,.10);border-bottom:1px solid rgba(0,0,0,.3);font-size:clamp(12px,1.12vw,19px);font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+td:first-child{border-radius:10px 0 0 10px}td:last-child{border-radius:0 10px 10px 0}
+.rank{display:inline-flex;align-items:center;justify-content:center;min-width:31px;height:31px;border:1px solid rgba(255,220,124,.22);border-radius:50%;color:var(--gold);background:rgba(255,220,124,.08);font-weight:900}
+.team{display:flex;align-items:center;gap:9px;min-width:0;text-align:left}.teamname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.emblem{width:32px;height:32px;flex:0 0 32px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(198,229,245,.11);font-size:12px;color:var(--cyan);overflow:hidden}.emblem img{width:100%;height:100%;object-fit:contain;background:white;border-radius:7px;padding:2px}.pts{color:var(--lime);font-size:clamp(15px,1.3vw,23px)}.diff{color:#afe6f6}
+.footer{padding:10px 16px;border-top:1px solid rgba(101,223,253,.14);background:rgba(0,5,13,.43);font-size:clamp(10px,.78vw,13px);color:var(--soft);line-height:1.25}
+.status{color:var(--lime);font-weight:bold;white-space:nowrap}.status.error{color:#ffb9a9}
+.message{padding:32px 18px 38px;text-align:center;color:var(--soft);font-size:17px;line-height:1.45}.message strong{color:var(--white)}
+@media(max-width:850px){#card{width:94vw;left:3vw;bottom:3vh}.header{padding:9px}.brand img{width:34px;height:34px}.heading{padding:10px}.meta{display:none}.tablewrap{padding:0 6px 7px}td{padding:6px 3px}.emblem{width:24px;height:24px;flex-basis:24px}.rank{min-width:24px;height:24px}.footer{padding:8px}.tag{padding:7px}}
+@media(max-height:650px){.header{padding:7px 12px}.brand img{width:32px;height:32px}.heading{padding:8px 14px 5px}td{padding:5px 4px}table{border-spacing:0 3px}.footer{padding:6px 12px}}
+</style>
+</head>
+<body>
+<div id="stage"><section id="card" aria-live="polite">
+<div class="header"><div class="brand"><img src="voleytv.png" alt="Logo Voley_TV"><div><div class="b1">VOLEY<span>_TV</span></div><div class="b2" id="subtitle">CONTROL 2.0 · TABLA UNIVERSAL</div></div></div><div class="tag">POSICIONES</div></div>
+<div class="heading"><div><h1>Tabla de posiciones</h1><p id="event">Conectando con el torneo…</p></div><div class="meta" id="count">—</div></div>
+<div class="tablewrap" id="content"><div class="message">Consultando la Base Maestra…</div></div>
+<div class="footer"><div id="note">Datos desde Google Sheets · Clasificación provisional hasta validar desempates</div><div class="status" id="status">Conectando…</div></div>
+</section></div>
+<script>
+'use strict';
+/* API de SOLO LECTURA. No incluir aquí la URL del administrador ni credenciales. */
+const API_URL = 'https://script.google.com/macros/s/AKfycbyQRr4IJIrF1ZkiUbVtBuNq0Hx8qRnEMdBiIXsyCPNC0Hgyd1XtsEzTYlxfGjmkVJw/exec';
+const params = new URLSearchParams(location.search);
+const torneo = params.get('torneo') || 'TEST-002';
+const categoria = params.get('categoria') || 'TEST-002-U14';
+const isDemo = params.get('demo') === '1';
+const REFRESH_MS = 20000;
+const TIMEOUT_MS = 12000;
+let busy = false, latest = null, timeout = null, script = null;
+const $ = id => document.getElementById(id);
+const escapeHTML = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeN = v => Number.isFinite(+v) ? Number(v) : 0;
+const initials = s => String(s || '?').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+function logoURL(u){
+  if (typeof u !== 'string' || !u.trim()) return '';
+  try { const x = new URL(u.trim()); return x.protocol === 'https:' ? x.href : ''; } catch (_) { return ''; }
+}
+function emblem(r){
+  const url=logoURL(r.logo);
+  return '<div class="emblem">'+(url ? '<img src="'+escapeHTML(url)+'" alt="" data-initials="'+escapeHTML(initials(r.name))+'" onerror="this.replaceWith(document.createTextNode(this.dataset.initials))">' : escapeHTML(initials(r.name)))+'</div>';
+}
+function render(data){
+  if (!data || data.ok !== true || !Array.isArray(data.standings)) throw Error(data && data.error || 'Respuesta incompleta de la API');
+  latest=data;
+  $('event').textContent=(data.torneo?.name || torneo)+' · '+(data.categoria?.name || categoria);
+  $('subtitle').textContent='CONTROL 2.0 · '+(data.categoria?.name || categoria);
+  $('count').textContent=String(safeN(data.finalizados))+' finalizados · '+String(safeN(data.pendientes))+' pendientes';
+  const standings=data.standings;
+  if (!standings.length){ $('content').innerHTML='<div class="message">Esta categoría todavía no tiene equipos inscritos.</div>'; }
+  else {
+    const rows=standings.map((r,i)=>'<tr><td><span class="rank">'+escapeHTML(r.pos ?? i+1)+'</span></td><td><div class="team">'+emblem(r)+'<span class="teamname">'+escapeHTML(r.name || r.id)+'</span></div></td><td>'+safeN(r.pj)+'</td><td>'+safeN(r.pg)+'</td><td>'+safeN(r.pp)+'</td><td>'+safeN(r.sf)+'</td><td>'+safeN(r.sc)+'</td><td class="diff">'+(safeN(r.dif)>0?'+':'')+safeN(r.dif)+'</td><td class="pts">'+safeN(r.pts)+'</td></tr>').join('');
+    $('content').innerHTML='<table><colgroup><col style="width:8%"><col style="width:35%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:9%"><col style="width:13%"></colgroup><thead><tr><th>Pos.</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PP</th><th>SF</th><th>SC</th><th>Dif.</th><th>Pts</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  const ties=(data.desempatesPendientes||[]).length;
+  $('note').textContent=ties ? 'Empates pendientes de criterios oficiales de desempate · Orden provisional' : 'Datos actualizados desde Google Sheets · Desempates sujetos a bases oficiales';
+  $('status').classList.remove('error');
+  $('status').textContent='Actualizado · '+new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+}
+function fail(message){
+  $('status').textContent='Sin conexión · reintentando';$('status').classList.add('error');
+  if (!latest) $('content').innerHTML='<div class="message"><strong>No se pudieron cargar los datos</strong><div>'+escapeHTML(message)+'</div></div>';
+}
+function clear(){if(timeout) clearTimeout(timeout);timeout=null;if(script){script.remove();script=null;}busy=false;}
+/* Callback JSONP definido globalmente, como requiere ContentService de Apps Script. */
+window.voleyTvRecibe = function(data){if (!busy) return;try{render(data);}catch(e){fail(e.message);}finally{clear();}};
+function refresh(){
+  if (busy) return;
+  busy=true;
+  script=document.createElement('script');script.async=true;
+  const q=new URLSearchParams({vista:'tabla',torneo,categoria,callback:'voleyTvRecibe',_v:String(Date.now())});
+  script.src=API_URL+'?'+q.toString();
+  script.onerror=()=>{fail('No fue posible consultar la API pública.');clear();};
+  timeout=setTimeout(()=>{fail('La consulta excedió el tiempo de espera.');clear();},TIMEOUT_MS);
+  document.head.appendChild(script);
+}
+if(isDemo){
+  render({ok:true,torneo:{name:'Copa Prueba Voley_TV 2.0'},categoria:{name:'Damas U14'},finalizados:0,pendientes:6,desempatesPendientes:[['EQ-A','EQ-B']],standings:['Equipo Aurora','Equipo Brisa','Equipo Costa','Equipo Delta'].map((name,i)=>({pos:i+1,name,pj:0,pg:0,pp:0,sf:0,sc:0,dif:0,pts:0}))});
+  $('status').textContent='Vista demostración';
+}else refresh();
+setInterval(()=>{if(!isDemo) refresh();},REFRESH_MS);
+</script>
+</body>
+</html>
